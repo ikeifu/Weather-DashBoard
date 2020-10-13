@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="hero is-dark is-small">
+      <div class="hero-body">
+        <h1 class="title navTitle">Weather Dashboard</h1>
+      </div>
+    </section>
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-4">
+        <article class="tile is-child box">
+          <h1 class="title">Search for a city:</h1>
+          <div class="content">
+            <div class="field">
+              <div class="control">
+                <div class="columns">
+                  <input
+                    class="input cityValue column-4"
+                    type="text"
+                    placeholder="City"
+                  />
+                  <a class="button is-primary column-4">Search</a>
+                  <div class="cityIndex"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="tile is-parent is-vertical is-8">
+        <div class="tile is-child box">
+          <p class="title city">City</p>
+          <br />
+          <p class="temperature">Temperature:</p>
+          <br />
+          <p class="humidity">Humidity:</p>
+          <br />
+          <p class="windSpeed">Wind Speed:</p>
+          <br />
+          <p class="uvIndex">UvIndex:</p>
+        </div>
+        <div class="tile is-child box">
+          <h1 class="title">5-Day Forecast:</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+            ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas
+            non massa sem. Etiam finibus odio quis feugiat facilisis.
+          </p>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
+      var queryURL =
+        "https://api.openweathermap.org/data/2.5/weather?q=Bujumbura,Burundi&units=imperial&appid=" +
+        APIKey;
+      $.ajax({
+        url: queryURL,
+        method: "GET",
+      }).then(function (response) {});
+    </script>
+  </body>
+</html>
