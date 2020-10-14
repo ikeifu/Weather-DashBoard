@@ -29,9 +29,9 @@
                     type="text"
                     placeholder="City"
                   />
-                  <a class="button is-primary column-4">Search</a>
-                  <div class="cityIndex"></div>
+                  <a class="button is-primary column-4 searchBtn">Search</a>
                 </div>
+                <div class="cityIndex"></div>
               </div>
             </div>
           </div>
@@ -47,28 +47,75 @@
           <br />
           <p class="windSpeed">Wind Speed:</p>
           <br />
-          <p class="uvIndex">UvIndex:</p>
+          <p class="uvIndex">UV Index:</p>
         </div>
         <div class="tile is-child box">
           <h1 class="title">5-Day Forecast:</h1>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
-            ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas
-            non massa sem. Etiam finibus odio quis feugiat facilisis.
-          </p>
         </div>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
-      var queryURL =
-        "https://api.openweathermap.org/data/2.5/weather?q=Bujumbura,Burundi&units=imperial&appid=" +
-        APIKey;
-      $.ajax({
-        url: queryURL,
-        method: "GET",
-      }).then(function (response) {});
+      // var currentCity = placeholder;
+      // $.ajax({
+      //   url: queryURL,
+      //   method: "GET",
+      // }).then(function (response) {});
+
+      $(".searchBtn").on("click", function () {
+        // New cities added
+        var cityValue = $(this).siblings()[0].value;
+        // console.log(cityValue);
+        var newCity = $("<p>");
+        $(newCity).text(cityValue);
+        // console.log(newCity);
+        $(".cityIndex").append(newCity);
+        var queryURL =
+          "https://api.openweathermap.org/data/2.5/weather?q=" +
+          cityValue +
+          "&units=imperial&appid=" +
+          APIKey;
+
+        var forecastUrl =
+          "https://api.openweathermap.org/data/2.5/forecast?q=" +
+          cityValue +
+          "&appid=" +
+          APIKey;
+        // 5 day Forecast
+        $.ajax({
+          url: forecastUrl,
+          method: "GET",
+        }).then(function (response) {
+          console.log(response);
+        });
+        $.ajax({
+          url: queryURL,
+          method: "GET",
+        }).then(function (response) {
+          // console.log(response);
+          $(".city").text("City: " + response.name);
+          $(".temperature").text("Temperature: " + response.main.temp);
+          $(".humidity").text("Humidity: " + response.main.humidity);
+          $(".windSpeed").text("Wind Speed: " + response.wind.speed);
+          var lon = response.coord.lon;
+          var lat = response.coord.lat;
+          var uvUrl =
+            "http://api.openweathermap.org/data/2.5/uvi?lat=" +
+            lat +
+            "&lon=" +
+            lon +
+            "&appid=" +
+            APIKey;
+          $.ajax({
+            url: uvUrl,
+            method: "GET",
+          }).then(function (response) {
+            // console.log(response);
+            $(".uvIndex").text("UV Index: " + response.value);
+          });
+        });
+      });
     </script>
   </body>
 </html>
