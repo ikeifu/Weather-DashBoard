@@ -1,3 +1,9 @@
 .navTitle {
   text-align: center;
 }
+.button {
+  margin: 10px;
+}
+.testColor {
+  background-color: red;
+}
