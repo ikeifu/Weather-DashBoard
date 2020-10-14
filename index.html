@@ -54,15 +54,10 @@
         </div>
       </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
-      // var currentCity = placeholder;
-      // $.ajax({
-      //   url: queryURL,
-      //   method: "GET",
-      // }).then(function (response) {});
-
       $(".searchBtn").on("click", function () {
         // New cities added
         var cityValue = $(this).siblings()[0].value;
@@ -74,7 +69,7 @@
         $(newCity).text(cityValue);
         // console.log(newCity);
         $(".cityIndex").append(cityDiv);
-        $(cityDiv).append(newCity);
+        $(cityDiv).prepend(newCity);
         var queryURL =
           "https://api.openweathermap.org/data/2.5/weather?q=" +
           cityValue +
@@ -91,14 +86,16 @@
           url: forecastUrl,
           method: "GET",
         }).then(function (response) {
-          console.log(response);
+          // console.log(response);
         });
         $.ajax({
           url: queryURL,
           method: "GET",
         }).then(function (response) {
-          // console.log(response);
-          $(".city").text("City: " + response.name);
+          console.log(response);
+          $(".city").text(
+            "City: " + response.name + " " + "(" + moment().format("LL") + ")"
+          );
           $(".temperature").text("Temperature: " + response.main.temp);
           $(".humidity").text("Humidity: " + response.main.humidity);
           $(".windSpeed").text("Wind Speed: " + response.wind.speed);
@@ -116,15 +113,15 @@
             method: "GET",
           }).then(function (response) {
             // console.log(response);
-            var uvi = $("<span>");
+            var uvi = $('<span class="tag">');
             var uvNum = response.value;
             $(uvi).text(" " + uvNum);
             if (uvNum <= 2) {
-              uvi.addClass("has-background-success");
+              uvi.addClass("is-success");
             } else if (uvNum <= 5) {
-              uvi.addClass("has-background-warning");
+              uvi.addClass("is-warning");
             } else {
-              uvi.addClass("has-background-danger");
+              uvi.addClass("is-danger");
             }
             $(".uvIndex").append(uvi);
           });
