@@ -52,17 +52,7 @@
         <div class="tile is-child box">
           <h1 class="title">5-Day Forecast:</h1>
           <div class="fiveDayContainer columns">
-            <!-- <div class="card column-2 has-background-info">
-              <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda necessitatibus, sint, ut eius veniam atque autem consectetur itaque quae dolore dolorum. Atque vitae ex voluptatem suscipit illum reprehenderit ad natus.
-              </div>
-            </div>
-            <div class="card column-2 has-background-info">
-              <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda necessitatibus, sint, ut eius veniam atque autem consectetur itaque quae dolore dolorum. Atque vitae ex voluptatem suscipit illum reprehenderit ad natus.
-              </div> -->
+
             </div>
           </div>
           </div>
@@ -75,7 +65,8 @@
       var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
       $(".searchBtn").on("click", function () {
         // New cities added
-        var cityValue = $(this).siblings()[0].value;
+        var cityValue = $('.cityValue').val();
+        // var cityValue = $(this).siblings()[0].value;
         // console.log(cityValue);
         var cityDiv = $("<div>");
         var newCity = $(
@@ -108,28 +99,32 @@
             var dayTemp = day.main.temp;
             var dayHumidity = day.main.humidity;
             var theDay = moment()
-            var icon = day.weather[0].icon
               .add(i + 1, "days")
               .format("LL");
+                var icon = day.weather[0].icon;
+                console.log(icon)
+            var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
+              console.log(iconURL)
             console.log(theDay);
             // console.log(dayTemp);
             // console.log(dayHumidity);
           var cardDiv = $('<div class="card column-2 has-background-info">');
-          var iconDiv = $('<span>');
+          var iconDiv = $('<img>');
           var tempDiv = $('<div>');
           var humidDiv = $('<div>');
-          var dayDiv = $('<div>');
+          var dayDiv = $('<h6>');
           $(tempDiv).text("Temp: " + dayTemp);
           $(humidDiv).text("Humidity " + dayHumidity);
-          $(iconDiv).text(icon);
+          $(iconDiv).attr("src", iconURL);
           $(dayDiv).text(theDay);
           $('.fiveDayContainer').append(cardDiv);
           $(cardDiv).prepend(dayDiv);
+          $(cardDiv).append(iconDiv);
           $(cardDiv).append(tempDiv);
           $(cardDiv).append(humidDiv);
             // fiveDay();
           }
-          // fiveDay();
+
           
         });
         // Main board
