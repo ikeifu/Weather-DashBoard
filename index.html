@@ -25,11 +25,11 @@
               <div class="control">
                 <div class="columns">
                   <input
-                    class="input cityValue column-10"
+                    class="input cityValue column-8"
                     type="text"
                     placeholder="City"
                   />
-                  <a class="button is-primary column-2 searchBtn">Search</a>
+                  <a class="button is-primary column-4 searchBtn">Search</a>
                 </div>
                 <div class="cityIndex"></div>
               </div>
@@ -51,6 +51,21 @@
         </div>
         <div class="tile is-child box">
           <h1 class="title">5-Day Forecast:</h1>
+          <div class="fiveDayContainer columns">
+            <!-- <div class="card column-2 has-background-info">
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda necessitatibus, sint, ut eius veniam atque autem consectetur itaque quae dolore dolorum. Atque vitae ex voluptatem suscipit illum reprehenderit ad natus.
+              </div>
+            </div>
+            <div class="card column-2 has-background-info">
+              <div class="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus nec iaculis mauris. Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda necessitatibus, sint, ut eius veniam atque autem consectetur itaque quae dolore dolorum. Atque vitae ex voluptatem suscipit illum reprehenderit ad natus.
+              </div> -->
+            </div>
+          </div>
+          </div>
         </div>
       </div>
     </div>
@@ -76,18 +91,48 @@
           "&units=imperial&appid=" +
           APIKey;
 
-        var forecastUrl =
+        var forecastURL =
           "https://api.openweathermap.org/data/2.5/forecast?q=" +
           cityValue +
-          "&appid=" +
+          "&units=imperial&appid=" +
           APIKey;
         // 5 day Forecast
         $.ajax({
-          url: forecastUrl,
+          url: forecastURL,
           method: "GET",
         }).then(function (response) {
           // console.log(response);
+          for (var i = 0; i < 5; i++) {
+            var day = response.list[i];
+            console.log(day);
+            var dayTemp = day.main.temp;
+            var dayHumidity = day.main.humidity;
+            var theDay = moment()
+            var icon = day.weather[0].icon
+              .add(i + 1, "days")
+              .format("LL");
+            console.log(theDay);
+            // console.log(dayTemp);
+            // console.log(dayHumidity);
+          var cardDiv = $('<div class="card column-2 has-background-info">');
+          var iconDiv = $('<span>');
+          var tempDiv = $('<div>');
+          var humidDiv = $('<div>');
+          var dayDiv = $('<div>');
+          $(tempDiv).text("Temp: " + dayTemp);
+          $(humidDiv).text("Humidity " + dayHumidity);
+          $(iconDiv).text(icon);
+          $(dayDiv).text(theDay);
+          $('.fiveDayContainer').append(cardDiv);
+          $(cardDiv).prepend(dayDiv);
+          $(cardDiv).append(tempDiv);
+          $(cardDiv).append(humidDiv);
+            // fiveDay();
+          }
+          // fiveDay();
+          
         });
+        // Main board
         $.ajax({
           url: queryURL,
           method: "GET",
@@ -127,6 +172,20 @@
           });
         });
       });
+      // function fiveDay() {
+      //   console.log("working");
+      //   var cardDiv = $('<div class="card column-2 has-background-info">');
+      //   var tempDiv = $('<div>');
+      //   var humidDiv = $('<div>');
+      //   var dayDiv = $('<div>');
+      //     $(tempDiv).text(dayTemp);
+      //     $(humidDiv).text(dayHumidity);
+      //     $(dayDiv).text(theDay);
+      //   $('.fiveDayContainer').append(cardDiv);
+      //   $(cardDiv).prepend(dayDiv);
+      //   $(cardDiv).append(tempDiv);
+      //   $(cardDiv).append(humidDiv);
+      // }
     </script>
   </body>
 </html>
