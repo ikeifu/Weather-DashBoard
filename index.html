@@ -63,14 +63,38 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
+      var storedCities;
+      var lastCitySearched;
+        var cities = [];
+        if(localStorage.getItem("cities")) {
+          storedCities = JSON.parse(localStorage.getItem("cities"));
+          // console.log(storedCities);
+          lastCitySearched = storedCities.length - 1;
+          var lastCity = storedCities[lastCitySearched];
+          console.log("Last City " + lastCity);
+          // renderLastCity();
+        } else {
+          cities;
+        }
+        renderLastCity();
       $(".searchBtn").on("click", function (event) {
         event.preventDefault();
         // New cities added
         var cityValue = $('.cityValue').val();
-        // var cityValue = $(this).siblings()[0].value;
-        // console.log(cityValue);
+        if (cityValue === ""){
+          return;
+        }
         renderSide(cityValue);
-        var queryURL =
+        // Getting from Storage 
+        // renderMain();
+        // renderUV();
+        // renderForecast(response);
+        // Storing of City value
+          cities.push(cityValue)
+          console.log(cities)
+          localStorage.setItem("cities", JSON.stringify(cities));
+        // 
+          var queryURL =
           "https://api.openweathermap.org/data/2.5/weather?q=" +
           cityValue +
           "&units=imperial&appid=" +
@@ -98,16 +122,46 @@
           // console.log(response);
           renderMain(response);
           renderUV(response);
+          
         });
         $('.pastCities').on("click", function(){
-        var cityValue = $(this).data("id");  
+          $(".uvIndex").empty();
+          $('.fiveDayContainer').empty();
+        var cityValue = $(this).data("id"); 
+        
+        var queryURL =
+          "https://api.openweathermap.org/data/2.5/weather?q=" +
+          cityValue +
+          "&units=imperial&appid=" +
+          APIKey;
+          var forecastURL =
+          "https://api.openweathermap.org/data/2.5/forecast?q=" +
+          cityValue +
+          "&units=imperial&appid=" +
+          APIKey;
+
+          $.ajax({
+          url: forecastURL,
+          method: "GET",
+        }).then(function (response) {
+          $('.fiveDayContainer').empty();
+          // console.log(response);
+          renderForecast(response)
+
+          $.ajax({
+          url: queryURL,
+          method: "GET",
+        }).then(function (response) {
+          // console.log(response);
+          renderMain(response);
+          renderUV(response);
+          
+        });
+        });
       });
       });
-      // $('.pastCities').on("click", function(){
-      //   console.log("Hello World")
-      //   var cityValue = data.value;
-      //   console.log(cityValue + "testing")
-      // })
+     
+     
       function renderSide(cityValue){
         var cityDiv = $('<div>');
         var newCity = $(
@@ -201,6 +255,38 @@
           $(cardDiv).append(humidDiv);
           }
         }
+      function renderLastCity() {
+        console.log("Working?");
+        var queryURL =
+          "https://api.openweathermap.org/data/2.5/weather?q=" +
+          lastCity +
+          "&units=imperial&appid=" +
+          APIKey;
+          var forecastURL =
+          "https://api.openweathermap.org/data/2.5/forecast?q=" +
+          lastCity +
+          "&units=imperial&appid=" +
+          APIKey;
+
+        $.ajax({
+          url: forecastURL,
+          method: "GET",
+        }).then(function (response) {
+          $('.fiveDayContainer').empty();
+          console.log(response);
+          renderForecast(response)
+        });
+        // Main board
+        $.ajax({
+          url: queryURL,
+          method: "GET",
+        }).then(function (response) {
+          // console.log(response);
+          renderMain(response);
+          renderUV(response);
+          
+        });
+      }
     </script>
   </body>
 </html>
