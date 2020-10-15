@@ -88,6 +88,7 @@
           "&units=imperial&appid=" +
           APIKey;
         // 5 day Forecast
+        $('.fiveDayContainer').empty();
         $.ajax({
           url: forecastURL,
           method: "GET",
@@ -95,16 +96,16 @@
           // console.log(response);
           for (var i = 0; i < 5; i++) {
             var day = response.list[i];
-            console.log(day);
+            // console.log(day);
             var dayTemp = day.main.temp;
             var dayHumidity = day.main.humidity;
             var theDay = moment()
               .add(i + 1, "days")
               .format("LL");
                 var icon = day.weather[0].icon;
-                console.log(icon)
+                // console.log(icon);
             var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
-              console.log(iconURL)
+              // console.log(iconURL)
             console.log(theDay);
             // console.log(dayTemp);
             // console.log(dayHumidity);
@@ -114,7 +115,7 @@
           var humidDiv = $('<div>');
           var dayDiv = $('<h6>');
           $(tempDiv).text("Temp: " + dayTemp);
-          $(humidDiv).text("Humidity " + dayHumidity);
+          $(humidDiv).text("Humidity: " + dayHumidity);
           $(iconDiv).attr("src", iconURL);
           $(dayDiv).text(theDay);
           $('.fiveDayContainer').append(cardDiv);
@@ -122,10 +123,7 @@
           $(cardDiv).append(iconDiv);
           $(cardDiv).append(tempDiv);
           $(cardDiv).append(humidDiv);
-            // fiveDay();
           }
-
-          
         });
         // Main board
         $.ajax({
@@ -133,12 +131,21 @@
           method: "GET",
         }).then(function (response) {
           console.log(response);
+          var icon = response.weather[0].icon;
+                console.log(icon)
+            var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
+            var iconDiv = $('<img>');
+            $(iconDiv).attr("src", iconURL);
           $(".city").text(
             "City: " + response.name + " " + "(" + moment().format("LL") + ")"
           );
+          $(".city").append(iconDiv);
           $(".temperature").text("Temperature: " + response.main.temp);
           $(".humidity").text("Humidity: " + response.main.humidity);
           $(".windSpeed").text("Wind Speed: " + response.wind.speed);
+          function renderLocation(){
+            
+          }
           var lon = response.coord.lon;
           var lat = response.coord.lat;
           var uvUrl =
@@ -148,14 +155,16 @@
             lon +
             "&appid=" +
             APIKey;
-          $.ajax({
+          
+          $(".uvIndex").empty();
+            $.ajax({
             url: uvUrl,
             method: "GET",
           }).then(function (response) {
             // console.log(response);
             var uvi = $('<span class="tag">');
             var uvNum = response.value;
-            $(uvi).text(" " + uvNum);
+            $(uvi).text("UV Index: " + uvNum);
             if (uvNum <= 2) {
               uvi.addClass("is-success");
             } else if (uvNum <= 5) {
@@ -167,20 +176,6 @@
           });
         });
       });
-      // function fiveDay() {
-      //   console.log("working");
-      //   var cardDiv = $('<div class="card column-2 has-background-info">');
-      //   var tempDiv = $('<div>');
-      //   var humidDiv = $('<div>');
-      //   var dayDiv = $('<div>');
-      //     $(tempDiv).text(dayTemp);
-      //     $(humidDiv).text(dayHumidity);
-      //     $(dayDiv).text(theDay);
-      //   $('.fiveDayContainer').append(cardDiv);
-      //   $(cardDiv).prepend(dayDiv);
-      //   $(cardDiv).append(tempDiv);
-      //   $(cardDiv).append(humidDiv);
-      // }
     </script>
   </body>
 </html>
