@@ -63,76 +63,68 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
       var APIKey = "e8f89c7f6e46ebcce4956f65813111a9 ";
-      $(".searchBtn").on("click", function () {
+      $(".searchBtn").on("click", function (event) {
+        event.preventDefault();
         // New cities added
         var cityValue = $('.cityValue').val();
         // var cityValue = $(this).siblings()[0].value;
         // console.log(cityValue);
-        var cityDiv = $("<div>");
-        var newCity = $(
-          '<button class="button is-light is-large is-fullwidth">'
-        );
-        $(newCity).text(cityValue);
-        // console.log(newCity);
-        $(".cityIndex").append(cityDiv);
-        $(cityDiv).prepend(newCity);
+        renderSide(cityValue);
         var queryURL =
           "https://api.openweathermap.org/data/2.5/weather?q=" +
           cityValue +
           "&units=imperial&appid=" +
           APIKey;
-
-        var forecastURL =
+          var forecastURL =
           "https://api.openweathermap.org/data/2.5/forecast?q=" +
           cityValue +
           "&units=imperial&appid=" +
           APIKey;
         // 5 day Forecast
-        $('.fiveDayContainer').empty();
+        // $('.fiveDayContainer').empty();
         $.ajax({
           url: forecastURL,
           method: "GET",
         }).then(function (response) {
+          $('.fiveDayContainer').empty();
           // console.log(response);
-          for (var i = 0; i < 5; i++) {
-            var day = response.list[i];
-            // console.log(day);
-            var dayTemp = day.main.temp;
-            var dayHumidity = day.main.humidity;
-            var theDay = moment()
-              .add(i + 1, "days")
-              .format("LL");
-                var icon = day.weather[0].icon;
-                // console.log(icon);
-            var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
-              // console.log(iconURL)
-            console.log(theDay);
-            // console.log(dayTemp);
-            // console.log(dayHumidity);
-          var cardDiv = $('<div class="card column-2 has-background-info">');
-          var iconDiv = $('<img>');
-          var tempDiv = $('<div>');
-          var humidDiv = $('<div>');
-          var dayDiv = $('<h6>');
-          $(tempDiv).text("Temp: " + dayTemp);
-          $(humidDiv).text("Humidity: " + dayHumidity);
-          $(iconDiv).attr("src", iconURL);
-          $(dayDiv).text(theDay);
-          $('.fiveDayContainer').append(cardDiv);
-          $(cardDiv).prepend(dayDiv);
-          $(cardDiv).append(iconDiv);
-          $(cardDiv).append(tempDiv);
-          $(cardDiv).append(humidDiv);
-          }
+          renderForecast(response)
         });
         // Main board
         $.ajax({
           url: queryURL,
           method: "GET",
         }).then(function (response) {
-          console.log(response);
-          var icon = response.weather[0].icon;
-                console.log(icon)
+          // console.log(response);
+          renderMain(response);
+          renderUV(response);
+        });
+        $('.pastCities').on("click", function(){
+        var cityValue = $(this).data("id");  
+      });
+      });
+      // $('.pastCities').on("click", function(){
+      //   console.log("Hello World")
+      //   var cityValue = data.value;
+      //   console.log(cityValue + "testing")
+      // })
+      function renderSide(cityValue){
+        var cityDiv = $('<div>');
+        var newCity = $(
+          '<div class="button is-light is-large pastCities is-fullwidth">'
+        );
+          // $(newCity).addClass('pastCities');
+          $(newCity).attr("data-id", cityValue);
+          $(newCity).text(cityValue);
+        // console.log(newCity);
+        $(".cityIndex").append(cityDiv);
+        $(cityDiv).prepend(newCity);        
+      }
+
+
+      function renderMain(response){
+        var icon = response.weather[0].icon;
+                // console.log(icon)
             var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
             var iconDiv = $('<img>');
             $(iconDiv).attr("src", iconURL);
@@ -143,12 +135,14 @@
           $(".temperature").text("Temperature: " + response.main.temp);
           $(".humidity").text("Humidity: " + response.main.humidity);
           $(".windSpeed").text("Wind Speed: " + response.wind.speed);
-          function renderLocation(){
-            
-          }
-          var lon = response.coord.lon;
+      }
+
+
+      function renderUV(response){
           var lat = response.coord.lat;
-          var uvUrl =
+          // console.log("test" + lat)
+          var lon = response.coord.lon;
+            var uvUrl =
             "http://api.openweathermap.org/data/2.5/uvi?lat=" +
             lat +
             "&lon=" +
@@ -174,8 +168,39 @@
             }
             $(".uvIndex").append(uvi);
           });
-        });
-      });
+          }
+          function renderForecast(response) {
+            for (var i = 0; i < 5; i++) {
+            var day = response.list[i];
+            // console.log(day);
+            var dayTemp = day.main.temp;
+            var dayHumidity = day.main.humidity;
+            var theDay = moment()
+              .add(i + 1, "days")
+              .format("LL");
+                var icon = day.weather[0].icon;
+                // console.log(icon);
+            var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png";
+              // console.log(iconURL)
+            // console.log(theDay);
+            // console.log(dayTemp);
+            // console.log(dayHumidity);
+          var cardDiv = $('<div class="card column-2 has-background-info">');
+          var iconDiv = $('<img>');
+          var tempDiv = $('<div>');
+          var humidDiv = $('<div>');
+          var dayDiv = $('<h6>');
+          $(tempDiv).text("Temp: " + dayTemp);
+          $(humidDiv).text("Humidity: " + dayHumidity);
+          $(iconDiv).attr("src", iconURL);
+          $(dayDiv).text(theDay);
+          $('.fiveDayContainer').append(cardDiv);
+          $(cardDiv).prepend(dayDiv);
+          $(cardDiv).append(iconDiv);
+          $(cardDiv).append(tempDiv);
+          $(cardDiv).append(humidDiv);
+          }
+        }
     </script>
   </body>
 </html>
