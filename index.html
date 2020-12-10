@@ -16,6 +16,7 @@
         <h1 class="title navTitle">Weather Dashboard</h1>
       </div>
     </section>
+    <div>test</div>
     <div class="tile is-ancestor">
       <div class="tile is-parent is-4">
         <article class="tile is-child box">
@@ -77,19 +78,14 @@
           cities;
         }
         renderLastCity();
-      $(".searchBtn").on("click", function (event) {
-        event.preventDefault();
+      $(".searchBtn").on("click", function () {
         // New cities added
         var cityValue = $('.cityValue').val();
+        console.log("city Value: " + cityValue)
         if (cityValue === ""){
           return;
         }
         renderSide(cityValue);
-        // Getting from Storage 
-        // renderMain();
-        // renderUV();
-        // renderForecast(response);
-        // Storing of City value
           cities.push(cityValue)
           console.log(cities)
           localStorage.setItem("cities", JSON.stringify(cities));
